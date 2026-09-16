@@ -1,0 +1,74 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Isolated in-game checks, never included in the distributable mod.
+if (project.hasProperty('smokeTest')) {
+    sourceSets {
+        smokeTest {
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+        }
+    }
+    loom {
+        mods {
+            althalt { sourceSet sourceSets.main }
+            althalt_smoke { sourceSet sourceSets.smokeTest }
+        }
+        runs {
+            smoke {
+                client()
+                source sourceSets.smokeTest
+                runDir 'build/smoke-run'
+                programArgs '--width', '960', '--height', '640'
+            }
+        }
+    }
+    tasks.named('runSmoke') {
+        doFirst {
+            delete layout.buildDirectory.file('smoke-run/smoke-result.txt')
+        }
+        doLast {
+            def result = layout.buildDirectory.file('smoke-run/smoke-result.txt').get().asFile
+            if (!result.exists() || !result.text.startsWith('PASS:')) {
+                throw new GradleException(result.exists() ? result.text : 'Smoke test did not complete.')
+            }
+        }
+    }
+}

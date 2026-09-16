@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "althalt",
+  "version": "${version}",
+  "name": "AltHalt",
+  "description": "Stops accidental server logins with per-server UUID locks and local account IP history.",
+  "authors": ["GoodrichDev"],
+  "contact": {
+    "sources": "https://github.com/GoodrichDev/AltHalt",
+    "issues": "https://github.com/GoodrichDev/AltHalt/issues"
+  },
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.goodrich.althalt.AltHaltClient"]
+  },
+  "mixins": ["althalt.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.2",
+    "java": ">=25"
+  }
+}

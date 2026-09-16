@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "althalt_smoke",
+  "version": "1.0.0",
+  "name": "AltHalt isolated smoke tests",
+  "environment": "client",
+  "mixins": ["althalt-smoke.mixins.json"]
+}

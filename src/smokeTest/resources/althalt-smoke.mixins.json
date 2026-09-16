@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.goodrich.althalt.smoke",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["ClientSmokeMixin", "IpLookupSmokeMixin"],
+  "injectors": {"defaultRequire": 1}
+}

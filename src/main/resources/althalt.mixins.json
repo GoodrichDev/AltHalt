@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.goodrich.althalt.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "ConnectScreenMixin",
+    "JoinMultiplayerScreenMixin",
+    "ServerStatusPingerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
